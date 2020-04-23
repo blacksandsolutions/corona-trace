@@ -3,8 +3,10 @@ import styled from 'styled-components';
 
 import createMap from './createMap';
 import { createTimeline, removeTimeline, updateTimeline } from './createTimeline';
+import { showHeatMap, hideHeatMap } from './heatmap';
 import addMarkers from './addMarkers';
 import ShowAllButton from './ShowAllButton';
+import ShowHeatMapButton from './ShowHeatMapButton';
 
 const MapContainer = styled.div`
   display: flex;
@@ -12,7 +14,21 @@ const MapContainer = styled.div`
   width: 100%;
 `;
 
-function Map({ latlng, locations, showAll }) {
+const ShowAllButtonWrapper = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+`;
+
+const ShowHeatMapButtonWrapper = styled.div`
+  position: absolute;
+  top: 16px;
+  right: 180px;
+  z-index: 1000;
+`;
+
+function Map({ latlng, locations, showAll, showHeat }) {
   const mapRef = useRef(null);
   const markerGroupRef = useRef(null);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -33,8 +49,20 @@ function Map({ latlng, locations, showAll }) {
   }, [showAll]);
 
   useEffect(() => {
+    // this effect initialiases the timeline
+    if (showHeat) {
+      showHeatMap(mapRef, locations);
+    } else {
+      hideHeatMap(mapRef);
+    }
+  }, [showHeat]);
+
+  useEffect(() => {
     // this effect responds to the loading of new locations
-    const markers = addMarkers(markerGroupRef, locations);
+    let markers = [];
+    if (!showHeat) {
+      markers = addMarkers(markerGroupRef, locations);
+    }
 
     // TODO make this smarter, pan to center of markers
     if (initialLoad) {
@@ -48,7 +76,12 @@ function Map({ latlng, locations, showAll }) {
 
   return (
     <MapContainer>
-      <ShowAllButton />
+      <ShowAllButtonWrapper>
+        <ShowAllButton disabled={showHeat} />
+      </ShowAllButtonWrapper>
+      <ShowHeatMapButtonWrapper>
+        <ShowHeatMapButton />
+      </ShowHeatMapButtonWrapper>
       <div id="map" />
     </MapContainer>
   );

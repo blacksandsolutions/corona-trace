@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
 `;
 
-export default function EditPage({ allLocations, locations, showAll }) {
+export default function EditPage({ allLocations, locations, showAll, showHeat }) {
   useEffect(() => {
     // for now always load saved state, in the future only do this if user is visiting their own URL?
     mapService.loadSavedState();
@@ -50,6 +50,7 @@ export default function EditPage({ allLocations, locations, showAll }) {
         latlng={{ lat: -41.284946, lng: 173.1960541 }}
         locations={withoutRemoved}
         showAll={showAll}
+        showHeat={showHeat}
       />
       <Sidebar allLocations={allLocations} locations={locations} showAll={showAll}>
         {addButton}

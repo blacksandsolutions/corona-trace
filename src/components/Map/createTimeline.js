@@ -31,8 +31,8 @@ function removeTimeline(mapRef) {
 /**
  * It does not appear possible to add data to an existing timeline.
  * Also  slider intervals are set when timeline added to it,
- * if initial state is empty slider has not times.
- * Therefore, each we get new data we need to create a new timeline.
+ * if initial state is empty slider has no times.
+ * Therefore, each time we get new data we need to create a new timeline.
  * @param {*} locations
  */
 function updateTimeline(locations) {

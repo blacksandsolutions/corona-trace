@@ -11,12 +11,14 @@ const _locations = new BehaviorSubject<any[]>([]);
 const _visibleLocations = new BehaviorSubject<any[]>([]);
 const _places = new BehaviorSubject<any[]>([]);
 const _showAll = new BehaviorSubject<boolean>(true);
+const _showHeat = new BehaviorSubject<boolean>(false);
 
 let _mapRef;
 let _markerGroupRef;
 let _latlng;
 let _sliderControl;
 let _timeline;
+let _heatmapRef;
 
 // TODO  needs to be configurable
 const startDate = new Date(2020, 0, 1, 0, 0, 0); // month is zero based
@@ -162,6 +164,12 @@ function toggleShowAll() {
   _locations.next([..._locations.value]);
 }
 
+function toggleShowHeat() {
+  _showHeat.next(!_showHeat.value);
+  // force location to update after timeline removed
+  //_locations.next([..._locations.value]);
+}
+
 function removeDuplicates(array: any[], key: string) {
   // each place/location gets a unique ID when we extract it, use this
   return array.filter((v, i, a) => a.findIndex((t) => t[key] === v[key]) === i);
@@ -188,16 +196,23 @@ const service = {
   setTimeline: (timeline) => {
     _timeline = timeline;
   },
+  setHeatMap: (heatmap) => {
+    _heatmapRef = heatmap;
+  },
   toggleShowAll,
+  toggleShowHeat,
   locations$: _locations.asObservable(),
   visibleLocations$: _visibleLocations.asObservable(),
   places$: _places.asObservable(),
   showAll$: _showAll.asObservable(),
+  showHeat$: _showHeat.asObservable(),
+  getHeatMapRef: () => _heatmapRef,
   getMapRef: () => _mapRef,
   getMarkerGroupRef: () => _markerGroupRef,
   getSliderControl: () => _sliderControl,
   getTimeline: () => _timeline,
   getShowAll: () => _showAll.value,
+  getShowHeat: () => _showHeat.value,
 };
 
 export default service;

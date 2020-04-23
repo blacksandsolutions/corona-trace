@@ -11,7 +11,8 @@ import LandingPage from './pages/LandingPage';
 import PlacesPage from './pages/PlacesPage';
 
 function App() {
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(mapService.getShowAll());
+  const [showHeat, setShowHeat] = useState(mapService.getShowHeat());
   const [allLocations, setAllLocations] = useState([]);
   const [visibleLocations, setVisibleLocations] = useState([]);
   const [places, setPlaces] = useState([]);
@@ -19,6 +20,10 @@ function App() {
   useEffect(() => {
     mapService.showAll$.subscribe((showAll) => {
       setShowAll(showAll);
+    });
+
+    mapService.showHeat$.subscribe((showHeat) => {
+      setShowHeat(showHeat);
     });
 
     // listen for new locations, they will arrive here when we load a file
@@ -53,14 +58,13 @@ function App() {
       <Header />
       <Switch>
         <Route path="/edit">
-          <EditPage locations={visibleLocations} allLocations={allLocations} showAll={showAll} />
+          <EditPage
+            locations={visibleLocations}
+            allLocations={allLocations}
+            showAll={showAll}
+            showHeat={showHeat}
+          />
         </Route>
-        {/* <Route path="/remove">
-          <RemovePage locations={visibleLocations} allLocations={allLocations} />
-        </Route>
-        <Route path="/import">
-          <ImportPage />
-        </Route> */}
         <Route path="/places">
           <PlacesPage places={places} />
         </Route>
